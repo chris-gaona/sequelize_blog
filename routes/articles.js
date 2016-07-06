@@ -1,3 +1,6 @@
+// TODO: Add comment functionality - http://docs.sequelizejs.com/en/latest/docs/associations/
+// TODO: Add user authentication - http://www.hamiltonchapman.com/blog/2014/3/25/user-accounts-using-sequelize-and-passport-in-nodejs
+
 var express = require('express');
 var router = express.Router();
 var Article = require('../models').Article;
