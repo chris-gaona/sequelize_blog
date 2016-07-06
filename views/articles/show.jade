@@ -4,6 +4,8 @@ block content
   h1= article.title
   include by_line
   p= article.body
+  include comment_form
+  br
   a(href="../") &larr; Back
   | | 
   a(href="/articles/" + article.id + "/edit") Edit Article
