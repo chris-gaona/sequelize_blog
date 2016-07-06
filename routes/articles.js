@@ -31,9 +31,9 @@ router.get("/:id/edit", function(req, res, next){
 
 /* Delete article form. */
 router.get("/:id/delete", function(req, res, next){
-  var article = find(req.params.id);
-
-  res.render("articles/delete", {article: article, title: "Delete Article"});
+  Article.findById(req.params.id).then(function (article) {
+    res.render("articles/delete", {article: article, title: "Delete Article"});
+  });
 });
 
 
@@ -55,11 +55,11 @@ router.put("/:id", function(req, res, next){
 
 /* DELETE individual article. */
 router.delete("/:id", function(req, res, next){
-  var article = find(req.params.id);
-  var index = articles.indexOf(article);
-  articles.splice(index, 1);
-
-  res.redirect("/articles");
+  Article.findById(req.params.id).then(function (article) {
+    return article.destroy();
+  }).then(function () {
+    res.redirect("/articles");
+  });
 });
 
 
