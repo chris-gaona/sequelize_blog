@@ -4,7 +4,14 @@ var dateFormat = require('dateformat');
 
 module.exports = function(sequelize, DataTypes) {
   var Comment = sequelize.define('Comment', {
-    comment: DataTypes.STRING,
+    comment: {
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {
+          msg: "A comment is required"
+        }
+      }
+    },
     author: DataTypes.STRING
   }, {
     classMethods: {

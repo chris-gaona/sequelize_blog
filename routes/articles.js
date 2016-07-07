@@ -1,7 +1,6 @@
 'use strict';
 
 // TODO: Add user authentication - http://www.hamiltonchapman.com/blog/2014/3/25/user-accounts-using-sequelize-and-passport-in-nodejs
-// TODO: Add catch to Comment calls to the db
 // TODO: Add validations to comments on db side
 
 var express = require('express');
@@ -10,9 +9,8 @@ var Article = require('../models').Article;
 var Comment = require('../models').Comment;
 
 /* GET articles listing. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res) {
   Article.findAll({order: [["createdAt", "DESC"]], include: [{ model: Comment, as: 'comments' }]}).then(function (articles) {
-    console.log(articles);
     res.render("articles/index", {articles: articles, title: "My Awesome Blog" });
   }).catch(function (err) {
     console.log(err);
@@ -21,7 +19,7 @@ router.get('/', function(req, res, next) {
 });
 
 /* POST create article. */
-router.post('/', function(req, res, next) {
+router.post('/', function(req, res) {
   Article.create(req.body).then(function (article) {
     res.redirect("/articles/" + article.id);
   }).catch(function (err) {
@@ -37,17 +35,18 @@ router.post('/', function(req, res, next) {
       throw err;
     }
   }).catch(function (err) {
+    console.log(err);
     res.sendStatus(500);
   });
 });
 
 /* Create a new article form. */
-router.get('/new', function(req, res, next) {
+router.get('/new', function(req, res) {
   res.render("articles/new", {article: Article.build(), title: "New Article"});
 });
 
 /* Edit article form. */
-router.get("/:id/edit", function(req, res, next){
+router.get("/:id/edit", function(req, res){
   Article.findById(req.params.id).then(function (article) {
     if (article) {
       res.render("articles/edit", {article: article, title: "Edit Article"});
@@ -55,12 +54,13 @@ router.get("/:id/edit", function(req, res, next){
       res.sendStatus(404);
     }
   }).catch(function (err) {
+    console.log(err);
     res.sendStatus(500);
   });
 });
 
 /* Delete article form. */
-router.get("/:id/delete", function(req, res, next){
+router.get("/:id/delete", function(req, res){
   Article.findById(req.params.id).then(function (article) {
     if (article) {
       res.render("articles/delete", {article: article, title: "Delete Article"});
@@ -68,55 +68,32 @@ router.get("/:id/delete", function(req, res, next){
       res.sendStatus(404);
     }
   }).catch(function (err) {
+    console.log(err);
     res.sendStatus(500);
   });
 });
 
 /* GET individual article. */
-// router.get("/:id", function(req, res, next){
-//   Article.findById(req.params.id).then(function (article) {
-//     Comment.findAll({where: {ArticleId: req.params.id}}).then(function (comments) {
-//       if (article) {
-//         res.render("articles/show", {article: article, comments: comments, title: article.title});
-//       } else {
-//         res.sendStatus(404);
-//       }
-//     });
-//   }).catch(function (err) {
-//     res.sendStatus(500);
-//   });
-// });
-
-router.get("/:id", function(req, res, next){
+router.get("/:id", function(req, res){
   Article.findById(req.params.id, {include: [{ model: Comment, as: 'comments' }]}).then(function (article) {
     if (article) {
-      console.log(JSON.stringify(article));
       res.render("articles/show", {article: article, title: article.title});
     } else {
       res.sendStatus(404);
     }
   }).catch(function (err) {
+    console.log(err);
     res.sendStatus(500);
   });
 });
 
-// router.get('/', function(req, res, next) {
-//   Article.findAll({order: [["createdAt", "DESC"]], include: [{ model: Comment, as: 'comments' }]}).then(function (articles) {
-//     console.log(articles);
-//     res.render("articles/index", {articles: articles, title: "My Awesome Blog" });
-//   }).catch(function (err) {
-//     console.log(err);
-//     res.sendStatus(500);
-//   });
-// });
-
 /* PUT update article. */
-router.put("/:id", function(req, res, next){
+router.put("/:id", function(req, res){
   Article.findById(req.params.id).then(function (article) {
     if (article) {
       return article.update(req.body);
     } else {
-      res.sendStatus(404)
+      res.sendStatus(404);
     }
   }).then(function (article) {
     res.redirect("/articles/" + article.id);
@@ -136,23 +113,25 @@ router.put("/:id", function(req, res, next){
       throw err;
     }
   }).catch(function (err) {
+    console.log(err);
     res.sendStatus(500);
   });
 });
 
 /* DELETE individual article. */
-router.delete("/:id", function(req, res, next){
+router.delete("/:id", function(req, res){
   Article.findById(req.params.id).then(function (article) {
     Comment.destroy({where: {ArticleId: req.params.id}}).then(function () {
       if (article) {
         return article.destroy();
       } else {
-        res.sendStatus(404)
+        res.sendStatus(404);
       }
     }).then(function () {
     res.redirect("/articles");
     });
   }).catch(function (err) {
+    console.log(err);
     res.sendStatus(500);
   });
 });
