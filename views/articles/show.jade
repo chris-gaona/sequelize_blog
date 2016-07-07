@@ -9,7 +9,9 @@ block content
   each comment in comments
     p= comment.comment
     p.small By 
-      = comment.author
+      = comment.author 
+      |  | 
+      = comment.commentedAt()
     hr
   form(action="/articles/" + article.id + "/comment", method="post")
     include comment_form
