@@ -116,13 +116,15 @@ router.put("/:id", function(req, res, next){
 /* DELETE individual article. */
 router.delete("/:id", function(req, res, next){
   Article.findById(req.params.id).then(function (article) {
-    if (article) {
-      return article.destroy();
-    } else {
-      res.sendStatus(404)
-    }
-  }).then(function () {
+    Comment.destroy({where: {ArticleId: req.params.id}}).then(function () {
+      if (article) {
+        return article.destroy();
+      } else {
+        res.sendStatus(404)
+      }
+    }).then(function () {
     res.redirect("/articles");
+    });
   }).catch(function (err) {
     res.sendStatus(500);
   });
