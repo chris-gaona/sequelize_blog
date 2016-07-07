@@ -4,7 +4,15 @@ block content
   h1= article.title
   include by_line
   p= article.body
-  include comment_form
+  h3 Comments:
+  hr
+  each comment in comments
+    p= comment.comment
+    p.small By 
+      = comment.author
+    hr
+  form(action="/articles/" + article.id + "/comment", method="post")
+    include comment_form
   br
   a(href="../") &larr; Back
   | | 

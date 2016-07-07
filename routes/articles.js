@@ -1,8 +1,11 @@
+'use strict';
+
 // TODO: Add user authentication - http://www.hamiltonchapman.com/blog/2014/3/25/user-accounts-using-sequelize-and-passport-in-nodejs
 
 var express = require('express');
 var router = express.Router();
 var Article = require('../models').Article;
+var Comment = require('../models').Comment;
 
 /* GET articles listing. */
 router.get('/', function(req, res, next) {
@@ -68,11 +71,13 @@ router.get("/:id/delete", function(req, res, next){
 /* GET individual article. */
 router.get("/:id", function(req, res, next){
   Article.findById(req.params.id).then(function (article) {
-    if (article) {
-      res.render("articles/show", {article: article, title: article.title});
-    } else {
-      res.sendStatus(404);
-    }
+    Comment.findAll({where: {ArticleId: req.params.id}}).then(function (comments) {
+      if (article) {
+        res.render("articles/show", {article: article, comments: comments, title: article.title});
+      } else {
+        res.sendStatus(404);
+      }
+    });
   }).catch(function (err) {
     res.sendStatus(500);
   });
