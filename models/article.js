@@ -18,7 +18,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         // associations can be defined here
-        Article.hasMany(models.Comment);
+        Article.hasMany(models.Comment, { as: 'comments' });
       }
     },
     instanceMethods: {

@@ -8,6 +8,7 @@ block content
   
   each article in articles
     h2= article.title
+    //- p= article.comments.length
     include by_line
     p= article.shortDescription()
     a(href = "/articles/" + article.id) Read More &rarr;

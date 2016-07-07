@@ -4,9 +4,8 @@ block content
   h1= article.title
   include by_line
   p= article.body
-  h3 Comments:
-  hr
-  each comment in comments
+  each comment in article.comments
+    hr
     p= comment.comment
     p.small By 
       = comment.author 
