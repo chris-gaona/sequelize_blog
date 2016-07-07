@@ -12,6 +12,7 @@ block content
       = comment.author 
       |  | 
       = comment.commentedAt()
+    a(href="/articles/" + article.id + "/comments/" + comment.id + "/delete") Delete Comment
     hr
   form(action="/articles/" + article.id + "/comment", method="post")
     include comment_form
