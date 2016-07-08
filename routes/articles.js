@@ -1,7 +1,6 @@
 'use strict';
 
 // TODO: Add user authentication - http://www.hamiltonchapman.com/blog/2014/3/25/user-accounts-using-sequelize-and-passport-in-nodejs
-// TODO: Add validations to comments on db side
 
 var express = require('express');
 var router = express.Router();
@@ -10,7 +9,9 @@ var Comment = require('../models').Comment;
 
 /* GET articles listing. */
 router.get('/', function(req, res) {
-  Article.findAll({order: [["createdAt", "DESC"]], include: [{ model: Comment, as: 'comments' }]}).then(function (articles) {
+  Article.findAll({include: [{ model: Comment, as: 'comments'}], order: [[ 'createdAt', 'DESC' ]]
+  }).then(function (articles) {
+    console.log(JSON.stringify(articles));
     res.render("articles/index", {articles: articles, title: "My Awesome Blog" });
   }).catch(function (err) {
     console.log(err);
@@ -75,7 +76,7 @@ router.get("/:id/delete", function(req, res){
 
 /* GET individual article. */
 router.get("/:id", function(req, res){
-  Article.findById(req.params.id, {include: [{ model: Comment, as: 'comments' }]}).then(function (article) {
+  Article.findById(req.params.id, {include: [{ model: Comment, as: 'comments' }], order: [[ {model: Comment, as: 'comments'}, 'createdAt', 'DESC' ]]}).then(function (article) {
     if (article) {
       res.render("articles/show", {article: article, title: article.title});
     } else {
