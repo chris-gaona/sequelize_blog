@@ -1,7 +1,5 @@
 'use strict';
 
-// TODO: Add user authentication - http://www.hamiltonchapman.com/blog/2014/3/25/user-accounts-using-sequelize-and-passport-in-nodejs
-
 var express = require('express');
 var router = express.Router();
 var Article = require('../models').Article;
@@ -11,7 +9,6 @@ var Comment = require('../models').Comment;
 router.get('/', function(req, res) {
   Article.findAll({include: [{ model: Comment, as: 'comments'}], order: [[ 'createdAt', 'DESC' ]]
   }).then(function (articles) {
-    console.log(JSON.stringify(articles));
     res.render("articles/index", {articles: articles, title: "My Awesome Blog" });
   }).catch(function (err) {
     console.log(err);
